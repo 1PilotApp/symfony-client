@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="one_pilot_client.service.composer" class="OnePilot\ClientBundle\Classes\Composer">
+            <argument type="service" id="one_pilot_client.service.package_detector"/>
+        </service>
+        <service id="one_pilot_client.service.files" class="OnePilot\ClientBundle\Classes\Files">
+            <argument>%kernel.project_dir%</argument>
+        </service>
+        <service id="one_pilot_client.service.package_detector" class="OnePilot\ClientBundle\Classes\ComposerPackageDetector">
+            <argument>%kernel.project_dir%</argument>
+        </service>
+        <service id="one_pilot_client.service.authentication" class="OnePilot\ClientBundle\Middlewares\Authentication">
+            <argument> </argument>
+            <argument> </argument>
+        </service>
+    </services>
+</container>
