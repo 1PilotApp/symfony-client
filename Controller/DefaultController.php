@@ -104,6 +104,7 @@ class DefaultController extends Controller
         $extra = [
             'storage_dir_writable' => is_writable($this->getParameter('kernel.logs_dir')),
             'cache_dir_writable' => is_writable($this->getParameter('kernel.cache_dir')),
+            'app.env' => $this->getParameter('kernel.environment'),
         ];
 
         foreach (self::CONFIGS_TO_MONITOR as $config) {
