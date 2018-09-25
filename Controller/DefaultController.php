@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use OnePilot\ClientBundle\Exceptions\ValidateFailed;
 
 class DefaultController extends Controller
 {
@@ -27,9 +28,13 @@ class DefaultController extends Controller
      */
     public function pingAction(Request $request)
     {
-        $this->get('one_pilot_client.service.authentication')->handle($request);
+        try {
+            $this->get('one_pilot_client.service.authentication')->handle($request);
+        } catch (ValidateFailed $exception) {
+            return $exception->render();
+        }
 
-        return new Response("pong");
+        return new JsonResponse(["message" => "pong"]);
     }
 
     /**
@@ -39,7 +44,11 @@ class DefaultController extends Controller
      */
     public function validateAction(Request $request)
     {
-        $this->get('one_pilot_client.service.authentication')->handle($request);
+        try {
+            $this->get('one_pilot_client.service.authentication')->handle($request);
+        } catch (ValidateFailed $exception) {
+            return $exception->render();
+        }
 
         return new JsonResponse([
             'core' => $this->getCore(),

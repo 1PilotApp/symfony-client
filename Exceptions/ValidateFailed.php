@@ -3,6 +3,7 @@
 namespace OnePilot\ClientBundle\Exceptions;
 
 use Exception;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class ValidateFailed extends Exception
@@ -46,7 +47,7 @@ class ValidateFailed extends Exception
      */
     public function render()
     {
-        return new Response([
+        return new JsonResponse([
             'message' => $this->getMessage(),
             'status' => 400,
             'data' => [],
