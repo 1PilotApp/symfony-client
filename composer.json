@@ -1,9 +1,9 @@
 {
-    "name": "onepilot/client-bundle",
+    "name": "1pilotapp/symfony-client",
     "version": "1.0.0",
     "type": "symfony-bundle",
-    "description": "Onepilot client for Symfony",
-    "keywords": [ "onepilot" ],
+    "description": "1Pilot client for Symfony",
+    "keywords": [ "1Pilot" ],
     "license": "MIT",
     "authors": [
         {
