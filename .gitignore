@@ -16,3 +16,5 @@
 /vendor/
 /web/bundles/
 /.idea
+/tests/app/cache
+/tests/app/logs

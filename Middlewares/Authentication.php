@@ -2,7 +2,6 @@
 
 namespace OnePilot\ClientBundle\Middlewares;
 
-use Closure;
 use OnePilot\ClientBundle\Exceptions\ValidateFailed;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,12 +16,20 @@ class Authentication
     /**
      * Authentication constructor.
      *
-     * @param string $privateKey
-     * @param string $skipTimeStampValidation
+     * @param string  $privateKey
+     * @param boolean $skipTimeStampValidation
      */
     public function __construct($privateKey, $skipTimeStampValidation)
     {
         $this->privateKey = $privateKey;
+        $this->skipTimeStampValidation = $skipTimeStampValidation;
+    }
+
+    /**
+     * @param boolean $skipTimeStampValidation
+     */
+    public function setSkipTimeValidation($skipTimeStampValidation)
+    {
         $this->skipTimeStampValidation = $skipTimeStampValidation;
     }
 

@@ -3,18 +3,20 @@
     "version": "1.0.0",
     "type": "symfony-bundle",
     "description": "1Pilot client for Symfony",
-    "keywords": [ "1Pilot" ],
+    "keywords": [
+        "1Pilot"
+    ],
     "license": "MIT",
     "authors": [
         {
-            "name":     "Francesco Abeni",
+            "name": "Francesco Abeni",
             "homepage": "https://www.refactory-project.com",
-            "email":    "francesco.abeni@gmail.com"
+            "email": "francesco.abeni@gmail.com"
         },
         {
-            "name":     "1Pilot",
+            "name": "1Pilot",
             "homepage": "https://1Pilot.io",
-            "email":    "support@1pilot.it"
+            "email": "support@1pilot.it"
         }
     ],
     "require": {
@@ -29,10 +31,17 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^6.0|^7.0",
-        "orchestra/testbench": "~3.5.0|~3.6.0|~3.7.0"
+        "symfony/phpunit-bridge": "^4.1"
     },
     "autoload": {
-        "psr-4": { "OnePilot\\ClientBundle\\": "" }
+        "psr-4": {
+            "OnePilot\\ClientBundle\\": ""
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "OnePilot\\ClientBundle\\Tests\\": "tests"
+        }
     },
     "scripts": {
         "test": "vendor/bin/phpunit"

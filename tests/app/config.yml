@@ -1,0 +1,15 @@
+# File: Tests/app/config.yml
+framework:
+    secret: "sdkjsdjkghsdkjhnsdjfhsjfsdjklghakgnòweuirw908"
+    test: ~
+    router:
+        resource: '%kernel.project_dir%/Resources/config/routing.xml'
+
+parameters:
+    one_pilot_private_key: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    one_pilot_skip_timestamp_validation: false
+
+## OnePilot configuration
+one_pilot_client:
+    private_key: "%one_pilot_private_key%"
+    skip_timestamp_validation: "%one_pilot_skip_timestamp_validation%"
