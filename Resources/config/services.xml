@@ -14,7 +14,7 @@
             <argument>%kernel.project_dir%</argument>
         </service>
         <service id="one_pilot_client.service.fake_package_detector" class="OnePilot\ClientBundle\Classes\FakePackageDetector"/>
-        <service id="one_pilot_client.service.authentication" class="OnePilot\ClientBundle\Middlewares\Authentication">
+        <service id="one_pilot_client.service.authentication" class="OnePilot\ClientBundle\Middlewares\Authentication" public="true">
             <argument> </argument>
             <argument> </argument>
         </service>
