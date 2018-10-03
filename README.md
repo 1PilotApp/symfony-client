@@ -4,6 +4,7 @@
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
+[![Build Status][ico-travis]][link-travis]
 [![Total Downloads][ico-downloads]][link-downloads]
 
 [1Pilot.io](1pilot.io) is a central Dashboard to manage your websites. It offers you a simple way to have all your websites and applications monitored on the same place. For Laravel applications you will benefit of the Uptime and Certificate 
@@ -98,6 +99,7 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 [ico-downloads]: https://img.shields.io/packagist/dt/1pilotapp/symfony-client.svg?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/1pilotapp/symfony-client
+[link-travis]: https://travis-ci.org/1PilotApp/symfony-client
 [link-downloads]: https://packagist.org/packages/1PilotApp/symfony-client
 [link-author]: https://github.com/1PilotApp
 [link-contributors]: ../../contributors
