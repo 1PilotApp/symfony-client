@@ -26,7 +26,7 @@ class DefaultController extends Controller
      *
      * @return Response
      */
-    public function pingAction(Request $request)
+    public function ping(Request $request)
     {
         try {
             $this->get('one_pilot_client.service.authentication')->handle($request);
@@ -42,7 +42,7 @@ class DefaultController extends Controller
      *
      * @return JsonResponse
      */
-    public function validateAction(Request $request)
+    public function validate(Request $request)
     {
         try {
             $this->get('one_pilot_client.service.authentication')->handle($request);
