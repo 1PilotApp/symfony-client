@@ -1,13 +1,45 @@
-# File: Tests/app/config.yml
 framework:
     secret: "sdkjsdjkghsdkjhnsdjfhsjfsdjklghakgnòweuirw908"
     test: ~
     router:
         resource: '%kernel.project_dir%/Resources/config/routing.xml'
 
+monolog:
+    handlers:
+        console:
+            type: stream
+            path: "%kernel.logs_dir%/console.log"
+            level: critical
+            channels: []
+
 parameters:
     one_pilot_private_key: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     one_pilot_skip_timestamp_validation: false
+
+services:
+    one_pilot_client.service.composer:
+        class: OnePilot\ClientBundle\Classes\Composer
+        public: true
+        arguments: [ '@one_pilot_client.service.package_detector' ]
+
+    one_pilot_client.service.files:
+        class: OnePilot\ClientBundle\Classes\Files
+        public: true
+        arguments: [ '%kernel.project_dir%' ]
+
+    one_pilot_client.service.package_detector:
+        class: OnePilot\ClientBundle\Classes\ComposerPackageDetector
+        public: true
+        arguments: [ '%kernel.project_dir%' ]
+
+    one_pilot_client.service.fake_package_detector:
+        class: OnePilot\ClientBundle\Classes\FakePackageDetector
+        public: true
+
+    one_pilot_client.service.authentication:
+        class: OnePilot\ClientBundle\Middlewares\Authentication
+        public: true
+        arguments: [ '%one_pilot_private_key%', '%one_pilot_skip_timestamp_validation%']
 
 ## OnePilot configuration
 one_pilot_client:
