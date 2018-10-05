@@ -1,0 +1,29 @@
+language: php
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+matrix:
+  include:
+    - php: 7.0
+      env: SYMFONY="3.*"
+
+    - php: 7.1
+      env: SYMFONY="3.*"
+    - php: 7.1
+      env: SYMFONY="4.*"
+
+    - php: 7.2
+      env: SYMFONY="3.*"
+    - php: 7.2
+      env: SYMFONY="4.*"
+
+before_script:
+  - travis_retry composer self-update
+  - travis_retry composer require "symfony/framework-bundle:${SYMFONY}" --no-interaction --prefer-dist
+
+script:
+  - phpunit
