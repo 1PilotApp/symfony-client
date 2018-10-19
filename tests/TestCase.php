@@ -2,6 +2,7 @@
 
 namespace OnePilot\ClientBundle\Tests;
 
+use OnePilot\ClientBundle\Classes\FakePackageDetector;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -37,6 +38,9 @@ abstract class TestCase extends BaseTestCase
         $this->kernel->boot();
         $this->container = $this->kernel->getContainer();
         $this->client = $this->container->get('test.client');
+
+        FakePackageDetector::setPackagesFromPath(__DIR__ . '/data/composer/installed-packages-light.json');
+        FakePackageDetector::generatePackagesConstraints();
     }
 
     /**

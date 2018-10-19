@@ -7,7 +7,7 @@ use OnePilot\ClientBundle\Contracts\PackageDetector;
 
 class ComposerPackageDetector implements PackageDetector
 {
-    /** @var string  */
+    /** @var string */
     private $projectRoot;
 
     /**
@@ -36,7 +36,8 @@ class ComposerPackageDetector implements PackageDetector
             ->filter()
             ->map(function ($package) {
                 return $package->require ?? null;
-            });
+            })
+            ->filter();
 
         $constraints = [];
 
