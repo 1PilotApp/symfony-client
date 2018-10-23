@@ -22,6 +22,6 @@ class OnePilotClientExtension extends Extension
 
         $definition = $container->getDefinition('one_pilot_client.service.authentication');
         $definition->replaceArgument(0, $configs[0]['private_key']);
-        $definition->replaceArgument(1, $configs[0]['skip_timestamp_validation']);
+        $definition->replaceArgument(1, $configs[0]['skip_timestamp_validation'] ?? false);
     }
 }
