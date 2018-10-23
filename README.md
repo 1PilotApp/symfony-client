@@ -20,27 +20,28 @@ composer require 1pilotapp/symfony-client:dev-master
 
 After installation, you need to setup the bundle. 
 
-**Symfony 3:**
+### Symfony 3
 
 1. add to your `app/config/config.yml` file the following configuration keys:
     ```
     one_pilot_client:
         private_key: "%one_pilot_private_key%"
-        skip_timestamp_validation: "%one_pilot_skip_timestamp_validation%"
     ```
+
 2. add to your `app/config/parameters.yml` file the following parameters:
-    ```    
-    one_pilot_private_key: [your key]
-    one_pilot_skip_timestamp_validation: [true|false]
     ```
-    `one_pilot_private_key` can be any random alphanumeric string. You choose it and remember it, because you'll have to use it when adding the site to 1Pilot dashboard. 
-    `one_pilot_skip_timestamp_validation` is usually set to `false` for better security, but it can be set to `true` if you experience troubles due to server time and timezone.
+        one_pilot_private_key: [your key]
+    ```
+    
+    > `one_pilot_private_key` can be any random alphanumeric string. You choose it and copy it, because you'll have to use it when adding the site to 1Pilot dashboard.
+
 3. add to your `app/config/routing.yml` the following configuration:
     ```
     one_pilot:
         resource: "@OnePilotClientBundle/Resources/config/routing.xml"
         prefix:   /
     ```
+
 4. add to your `app/AppKernel.php` file, in the `registerBundles` method, the following line:
     ```
     ...
@@ -48,22 +49,22 @@ After installation, you need to setup the bundle.
     ...
     ```
 
-**Symfony 4:**
+### Symfony 4
 
-1. add a new `app/config/packages/one_pilot_client.yaml` file with the following content:
+1. add a new `config/packages/one_pilot_client.yaml` file with the following content:
     ```
     one_pilot_client:
-        private_key: "%one_pilot_private_key%"
-        skip_timestamp_validation: "%one_pilot_skip_timestamp_validation%"
+        private_key: "%env(ONE_PILOT_PRIVATE_KEY)%"
     ```
+
 2. add to your `.env` file the following parameters:
     ```    
     ONE_PILOT_PRIVATE_KEY=[your key]
-    ONE_PILOT_SKIP_TIMESTAMP_VALIDATION=[true|false]
     ```
-    `ONE_PILOT_PRIVATE_KEY` can be any random alphanumeric string. You choose it and remember it, because you'll have to use it when adding the site to 1Pilot dashboard. 
-    `ONE_PILOT_SKIP_TIMESTAMP_VALIDATION` is usually set to `false` for better security, but it can be set to `true` if you experience troubles due to server time and timezone.
-3. add to your `app/config/routes.yaml` the following configuration:
+
+    > `ONE_PILOT_PRIVATE_KEY` can be any random alphanumeric string. You choose it and remember it, because you'll have to use it when adding the site to 1Pilot dashboard. 
+
+3. add to your `config/routes.yaml` the following configuration:
     ```
     one_pilot:
         resource: "@OnePilotClientBundle/Resources/config/routing.xml"
@@ -72,13 +73,22 @@ After installation, you need to setup the bundle.
 
 You should now ready to add the site to your 1Pilot dashboard!
 
+## Advanced configuration
+If your server is not at time you can have issue to connect your application to 1Pilot. For solve that edit `app/config/config.yml` and add `skip_timestamp_validation` like bellow.
+```
+one_pilot_client:
+    private_key: "..."
+    skip_timestamp_validation: true
+```
+> Please note that this option will decrease security and that you should as much as possible set your server at the correct time.
+
 ## Change log
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for details.
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Security
 
