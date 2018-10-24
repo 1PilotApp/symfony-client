@@ -111,7 +111,7 @@ class DefaultController extends Controller
             try {
                 $extra[$config] = $this->getParameter($config);
             } catch (InvalidArgumentException $ex) {
-                $extra[$config] = 'undefined';
+                $extra[$config] = null;
             }
         }
 
