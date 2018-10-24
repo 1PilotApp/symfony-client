@@ -30,15 +30,6 @@ class DefaultController extends Controller
     /** @var \OnePilot\ClientBundle\Classes\Files */
     private $fileService;
 
-    public function __construct()
-    {
-        $this->authenticationService = $this->get('one_pilot_client.service.authentication');
-
-        $this->composerService = $this->get('one_pilot_client.service.composer');
-
-        $this->fileService = $this->get('one_pilot_client.service.files');
-    }
-
     /**
      * @param Request $request
      *
@@ -46,6 +37,8 @@ class DefaultController extends Controller
      */
     public function ping(Request $request)
     {
+        $this->initServices();
+
         try {
             $this->authenticationService->handle($request);
         } catch (ValidateFailed $exception) {
@@ -62,6 +55,8 @@ class DefaultController extends Controller
      */
     public function validate(Request $request)
     {
+        $this->initServices();
+
         try {
             $this->authenticationService->handle($request);
         } catch (ValidateFailed $exception) {
@@ -75,6 +70,15 @@ class DefaultController extends Controller
             'extra'   => $this->getExtra(),
             'files'   => $this->fileService->getFilesProperties(),
         ]);
+    }
+
+    private function initServices()
+    {
+        $this->authenticationService = $this->get('one_pilot_client.service.authentication');
+
+        $this->composerService = $this->get('one_pilot_client.service.composer');
+
+        $this->fileService = $this->get('one_pilot_client.service.files');
     }
 
     /**
