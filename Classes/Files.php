@@ -3,6 +3,7 @@
 namespace OnePilot\ClientBundle\Classes;
 
 use OnePilot\ClientBundle\Traits\Instantiable;
+use Symfony\Component\HttpKernel\Kernel;
 
 class Files
 {
@@ -31,10 +32,16 @@ class Files
         $filesProperties = [];
 
         $files = [
-            '/.env',
-            '/web/app.php',
-            '/web/app_dev.php',
-            '/web/.htaccess',
+            '.env',
+
+            // Symfony 3
+            'web/app.php',
+            'web/app_dev.php',
+            'web/.htaccess',
+
+            // Symfony 4
+            'public/index.php',
+            'public/.htaccess',
         ];
 
         $configFiles = $this->getConfigFiles();
@@ -42,7 +49,7 @@ class Files
         foreach ($files + $configFiles as $absolutePath => $relativePath) {
 
             if (is_int($absolutePath)) {
-                $absolutePath = $this->projectRoot.$relativePath;
+                $absolutePath = $this->projectRoot . DIRECTORY_SEPARATOR . $relativePath;
             }
 
             if (!file_exists($absolutePath)) {
@@ -54,9 +61,9 @@ class Files
             fclose($fp);
 
             $filesProperties[] = [
-                'path' => $relativePath,
-                'size' => $fstat['size'],
-                'mtime' => $fstat['mtime'],
+                'path'     => $relativePath,
+                'size'     => $fstat['size'],
+                'mtime'    => $fstat['mtime'],
                 'checksum' => md5_file($absolutePath),
             ];
         }
@@ -69,8 +76,14 @@ class Files
      */
     private function getConfigFiles()
     {
-        return collect(glob($this->projectRoot.'/app/config/*'))->mapWithKeys(function ($absolutePath) {
-            $relativePath = str_replace($this->projectRoot.DIRECTORY_SEPARATOR, '', $absolutePath);
+        $configDirectory = Kernel::MAJOR_VERSION === 4 ? '/config/*' : '/app/config/*';
+
+        return collect(glob($this->projectRoot . $configDirectory))->mapWithKeys(function ($absolutePath) {
+            if (is_dir($absolutePath)) {
+                return;
+            }
+
+            $relativePath = str_replace($this->projectRoot . DIRECTORY_SEPARATOR, '', $absolutePath);
 
             return [
                 $absolutePath => $relativePath,
