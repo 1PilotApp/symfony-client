@@ -4,19 +4,33 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="one_pilot_client.service.composer" class="OnePilot\ClientBundle\Classes\Composer">
+        <service id="one_pilot_client.service.composer"
+                 class="OnePilot\ClientBundle\Classes\Composer"
+                 public="true">
             <argument type="service" id="one_pilot_client.service.package_detector"/>
         </service>
-        <service id="one_pilot_client.service.files" class="OnePilot\ClientBundle\Classes\Files">
+
+        <service id="one_pilot_client.service.files"
+                 class="OnePilot\ClientBundle\Classes\Files"
+                 public="true">
             <argument>%kernel.project_dir%</argument>
         </service>
-        <service id="one_pilot_client.service.package_detector" class="OnePilot\ClientBundle\Classes\ComposerPackageDetector">
+
+        <service id="one_pilot_client.service.package_detector"
+                 class="OnePilot\ClientBundle\Classes\ComposerPackageDetector"
+                 public="true">
             <argument>%kernel.project_dir%</argument>
         </service>
-        <service id="one_pilot_client.service.fake_package_detector" class="OnePilot\ClientBundle\Classes\FakePackageDetector"/>
-        <service id="one_pilot_client.service.authentication" class="OnePilot\ClientBundle\Middlewares\Authentication" public="true">
-            <argument> </argument>
-            <argument> </argument>
+
+        <service id="one_pilot_client.service.fake_package_detector"
+                 class="OnePilot\ClientBundle\Classes\FakePackageDetector"
+                 public="true"/>
+
+        <service id="one_pilot_client.service.authentication"
+                 class="OnePilot\ClientBundle\Middlewares\Authentication"
+                 public="true">
+            <argument></argument>
+            <argument></argument>
         </service>
     </services>
 </container>
