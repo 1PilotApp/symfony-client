@@ -1,5 +1,3 @@
-**PACKAGE STILL IN DEVELOPMENT**
-
 # 1Pilot.io connector for Symfony applications
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
@@ -7,15 +5,13 @@
 [![Build Status][ico-travis]][link-travis]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-[1Pilot.io](1pilot.io) is a central Dashboard to manage your websites. It offers you a simple way to have all your websites and applications monitored on the same place. For Laravel applications you will benefit of the Uptime and Certificate 
+[1Pilot.io](1pilot.io) is a central Dashboard to manage your websites. It offers you a simple way to have all your websites and applications monitored on the same place. For Symfony applications you will benefit of the Uptime and Certificate 
 monitoring as well as the report of installed package and updates available: a simple way to keep your apps up-to-date and secure.
-
-This bundle is **1Pilot** client app for Symfony.
 
 ## Install
 
 ``` bash
-composer require 1pilotapp/symfony-client:dev-master
+composer require 1pilotapp/symfony-client
 ```
 
 After installation, you need to setup the bundle. 
@@ -49,6 +45,8 @@ After installation, you need to setup the bundle.
     ...
     ```
 
+You are now ready to add the site to your [1Pilot dashboard](https://app.1pilot.io/sites/create)!
+
 ### Symfony 4
 
 1. add a new `config/packages/one_pilot_client.yaml` file with the following content:
@@ -71,7 +69,7 @@ After installation, you need to setup the bundle.
         prefix:   /
     ```
 
-You should now ready to add the site to your 1Pilot dashboard!
+You are now ready to add the site to your [1Pilot dashboard](https://app.1pilot.io/sites/create)!
 
 ## Advanced configuration
 If your server is not at time you can have issue to connect your application to 1Pilot. For solve that edit `app/config/config.yml` and add `skip_timestamp_validation` like bellow.

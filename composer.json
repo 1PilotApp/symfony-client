@@ -1,10 +1,11 @@
 {
     "name": "1pilotapp/symfony-client",
-    "version": "1.0.1",
-    "type": "symfony-bundle",
     "description": "1Pilot client for Symfony",
+    "type": "symfony-bundle",
     "keywords": [
-        "1Pilot"
+        "1Pilot",
+        "Symfony",
+        "monitoring"
     ],
     "license": "MIT",
     "authors": [
@@ -15,7 +16,7 @@
         },
         {
             "name": "1Pilot",
-            "homepage": "https://1Pilot.io",
+            "homepage": "https://1pilot.io",
             "email": "support@1pilot.io"
         }
     ],
