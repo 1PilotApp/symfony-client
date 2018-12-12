@@ -11,10 +11,10 @@ monitoring as well as the report of installed package and updates available: a s
 ## Install
 
 ``` bash
-composer require 1pilotapp/symfony-client
+composer require 1pilotapp/symfony-client --no-scripts
 ```
 
-After installation, you need to setup the bundle. 
+The `no-scripts` option is required to prevent errors, because you need to setup a few configuration parameters before being able to use the bundle.
 
 ### Symfony 3
 
@@ -24,21 +24,29 @@ After installation, you need to setup the bundle.
         private_key: "%one_pilot_private_key%"
     ```
 
-2. add to your `app/config/parameters.yml` file the following parameters:
+2. add to your `app/config/parameters.yml.dist` file the following parameter:
+    ```
+        one_pilot_private_key: ~
+    ```
+    
+   This defines the new required configuration parameter.
+    
+3. add to your `app/config/parameters.yml` file the following parameter: 
+
     ```
         one_pilot_private_key: [your key]
     ```
     
-    > `one_pilot_private_key` can be any random alphanumeric string. You choose it and copy it, because you'll have to use it when adding the site to 1Pilot dashboard.
+    > `one_pilot_private_key` can be any random alphanumeric string. If you are not sure what key to use, go to 1Pilot dashboard and open the page to add a new site: a random key will be generated for you, and you can copy / paste it in your file. Of course you are free to create a totally different key, just make sure you have the same key in your `parameters.yml` and on the 1Pilot dashboard.
 
-3. add to your `app/config/routing.yml` the following configuration:
+4. add to your `app/config/routing.yml` the following configuration:
     ```
     one_pilot:
         resource: "@OnePilotClientBundle/Resources/config/routing.xml"
         prefix:   /
     ```
 
-4. add to your `app/AppKernel.php` file, in the `registerBundles` method, the following line:
+5. add to your `app/AppKernel.php` file, in the `registerBundles` method, the following line:
     ```
     ...
     new OnePilot\ClientBundle\OnePilotClientBundle(),
@@ -59,8 +67,7 @@ You are now ready to add the site to your [1Pilot dashboard](https://app.1pilot.
     ```    
     ONE_PILOT_PRIVATE_KEY=[your key]
     ```
-
-    > `ONE_PILOT_PRIVATE_KEY` can be any random alphanumeric string. You choose it and remember it, because you'll have to use it when adding the site to 1Pilot dashboard. 
+    > `ONE_PILOT_PRIVATE_KEY` can be any random alphanumeric string. If you are not sure what key to use, go to 1Pilot dashboard and open the page to add a new site: a random key will be generated for you, and you can copy / paste it in your file. Of course you are free to create a totally different key, just make sure you have the same key in your `.env` and on the 1Pilot dashboard. 
 
 3. add to your `config/routes.yaml` the following configuration:
     ```
