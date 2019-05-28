@@ -9,14 +9,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ValidationsTest extends TestCase
 {
-    use SetUpTrait;
-
     /** @var Response */
     private static $response;
 
     public function internalSetUp()
     {
-        parent::setUp();
+        parent::internalSetUp();
 
         if (empty(self::$response)) {
             $this->client->request('GET', '/onepilot/validate', [], [], $this->authenticationHeaders());

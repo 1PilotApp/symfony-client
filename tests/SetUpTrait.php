@@ -10,14 +10,12 @@ if (version_compare(phpversion(), '7.1', '<')) {
             $this->internalSetUp();
         }
     }
-
-    return;
-}
-
-trait SetUpTrait
-{
-    protected function setUp(): void
+} else {
+    trait SetUpTrait
     {
-        $this->internalSetUp();
+        protected function setUp(): void
+        {
+            $this->internalSetUp();
+        }
     }
 }
