@@ -10,6 +10,8 @@ use Symfony\Component\HttpKernel\Kernel;
 
 abstract class TestCase extends BaseTestCase
 {
+    use SetUpTrait;
+
     /** @var Kernel */
     protected $kernel;
 
@@ -29,9 +31,9 @@ abstract class TestCase extends BaseTestCase
     protected $client;
 
     /**
-     *
+     * @see setUp()
      */
-    protected function setUp()
+    protected function internalSetUp()
     {
         $this->setTimestamp();
         $this->kernel = new \AppKernel('test', true);
