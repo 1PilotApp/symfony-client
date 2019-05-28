@@ -21,14 +21,15 @@ matrix:
       env: SYMFONY="4.2"
 
     - php: 7.3
-      env: SYMFONY="4.3.x-dev"
+      env: SYMFONY="4.3.x-dev" STABILITY="dev"
 
   allow_failures:
     - php: 7.3
-      env: SYMFONY="4.3.x-dev"
+      env: SYMFONY="4.3.x-dev" STABILITY="dev"
 
 before_script:
   - travis_retry composer self-update
+  - if ! [ -z "$STABILITY" ]; then composer config minimum-stability ${STABILITY}; fi;
   - travis_retry composer require "symfony/framework-bundle:${SYMFONY}" --no-interaction --prefer-dist
 
 script:
