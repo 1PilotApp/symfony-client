@@ -3,6 +3,7 @@
 namespace OnePilot\ClientBundle\Tests\Integration;
 
 use OnePilot\ClientBundle\Classes\FakePackageDetector;
+use OnePilot\ClientBundle\Tests\SetUpTrait;
 use OnePilot\ClientBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -11,9 +12,9 @@ class ValidationsTest extends TestCase
     /** @var Response */
     private static $response;
 
-    public function setUp()
+    public function internalSetUp()
     {
-        parent::setUp();
+        parent::internalSetUp();
 
         if (empty(self::$response)) {
             $this->client->request('GET', '/onepilot/validate', [], [], $this->authenticationHeaders());
