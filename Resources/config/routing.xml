@@ -9,4 +9,7 @@
     <route id="one_pilot_validate" path="/onepilot/validate">
         <default key="_controller">OnePilot\ClientBundle\Controller\ValidateController::index</default>
     </route>
+    <route id="one_pilot_mailtester" path="/onepilot/mail-tester">
+        <default key="_controller">OnePilot\ClientBundle\Controller\MailTesterController::send</default>
+    </route>
 </routes>

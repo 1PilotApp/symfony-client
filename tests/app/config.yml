@@ -3,6 +3,9 @@ framework:
     test: ~
     router:
         resource: '%kernel.project_dir%/Resources/config/routing.xml'
+    profiler:
+        enabled: true
+        collect: false
 
 monolog:
     handlers:
@@ -14,6 +17,7 @@ monolog:
 
 parameters:
     one_pilot_private_key: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    one_pilot_mail_from_address: "unit-tests@example.com"
     one_pilot_skip_timestamp_validation: false
 
 services:
@@ -44,4 +48,8 @@ services:
 ## OnePilot configuration
 one_pilot_client:
     private_key: "%one_pilot_private_key%"
+    mail_from_address: "%one_pilot_mail_from_address%"
     skip_timestamp_validation: "%one_pilot_skip_timestamp_validation%"
+
+swiftmailer:
+    disable_delivery: true
