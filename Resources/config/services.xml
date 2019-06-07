@@ -3,16 +3,17 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+        <service id="one_pilot_client.service.authentication"
+                 class="OnePilot\ClientBundle\Middlewares\Authentication"
+                 public="true">
+            <argument></argument>
+            <argument></argument>
+        </service>
+
         <service id="one_pilot_client.service.composer"
                  class="OnePilot\ClientBundle\Classes\Composer"
                  public="true">
             <argument type="service" id="one_pilot_client.service.package_detector"/>
-        </service>
-
-        <service id="one_pilot_client.service.files"
-                 class="OnePilot\ClientBundle\Classes\Files"
-                 public="true">
-            <argument>%kernel.project_dir%</argument>
         </service>
 
         <service id="one_pilot_client.service.package_detector"
@@ -25,11 +26,42 @@
                  class="OnePilot\ClientBundle\Classes\FakePackageDetector"
                  public="true"/>
 
-        <service id="one_pilot_client.service.authentication"
-                 class="OnePilot\ClientBundle\Middlewares\Authentication"
-                 public="true">
-            <argument></argument>
-            <argument></argument>
+        <service id="one_pilot_client.service.files"
+                 class="OnePilot\ClientBundle\Classes\Files" public="true">
+            <argument>%kernel.project_dir%</argument>
+        </service>
+
+        <service id="one_pilot_client.service.logs_browser"
+                 class="OnePilot\ClientBundle\Classes\LogsBrowser" public="true">
+            <argument>%kernel.logs_dir%</argument>
+            <argument>%kernel.environment%</argument>
+        </service>
+
+        <service id="one_pilot_client.service.logs_overview"
+                 class="OnePilot\ClientBundle\Classes\LogsOverview" public="true">
+            <argument>%kernel.logs_dir%</argument>
+            <argument>%kernel.environment%</argument>
+        </service>
+
+        <!-- Controllers -->
+        <service id="one_pilot_client.ping_controller"
+                 class="OnePilot\ClientBundle\Controller\PingController" public="true">
+        </service>
+
+        <service id="one_pilot_client.validate_controller"
+                 class="OnePilot\ClientBundle\Controller\ValidateController" public="true">
+            <argument type="service" id="one_pilot_client.service.composer"/>
+            <argument type="service" id="one_pilot_client.service.files"/>
+            <argument type="service" id="one_pilot_client.service.logs_overview"/>
+        </service>
+
+        <service id="one_pilot_client.mail_tester_controller"
+                 class="OnePilot\ClientBundle\Controller\MailTesterController" public="true">
+        </service>
+
+        <service id="one_pilot_client.errors_controller"
+                 class="OnePilot\ClientBundle\Controller\ErrorsController" public="true">
+            <argument type="service" id="one_pilot_client.service.logs_browser"/>
         </service>
     </services>
 </container>

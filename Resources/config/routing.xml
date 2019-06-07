@@ -4,12 +4,15 @@
         xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
     <route id="one_pilot_ping" path="/onepilot/ping">
-        <default key="_controller">OnePilot\ClientBundle\Controller\PingController::index</default>
+        <default key="_controller">one_pilot_client.ping_controller:index</default>
     </route>
     <route id="one_pilot_validate" path="/onepilot/validate">
-        <default key="_controller">OnePilot\ClientBundle\Controller\ValidateController::index</default>
+        <default key="_controller">one_pilot_client.validate_controller:index</default>
     </route>
     <route id="one_pilot_mailtester" path="/onepilot/mail-tester">
-        <default key="_controller">OnePilot\ClientBundle\Controller\MailTesterController::send</default>
+        <default key="_controller">one_pilot_client.mail_tester_controller:send</default>
+    </route>
+    <route id="one_pilot_errors" path="/onepilot/errors">
+        <default key="_controller">one_pilot_client.errors_controller:index</default>
     </route>
 </routes>

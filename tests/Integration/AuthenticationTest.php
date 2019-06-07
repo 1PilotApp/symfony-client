@@ -37,6 +37,21 @@ class AuthenticationTest extends TestCase
     }
 
     /** @test */
+    public function it_will_fail_when_call_errors_without_authentication_headers()
+    {
+        $this->client->request('POST', '/onepilot/errors');
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertJson($response->getContent());
+        $this->assertEquals([
+            'message' => "The request did not contain a header named `HTTP_HASH`.",
+            'status' => 400,
+            'data' => [],
+        ], json_decode($response->getContent(), true));
+    }
+
+    /** @test */
     public function it_will_fail_when_no_authentication_headers_are_set()
     {
         $this->client->request('GET', '/onepilot/ping');

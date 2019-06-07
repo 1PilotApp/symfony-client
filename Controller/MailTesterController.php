@@ -3,7 +3,6 @@
 namespace OnePilot\ClientBundle\Controller;
 
 use Exception;
-use OnePilot\ClientBundle\Exceptions\ValidateFailed;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -23,13 +22,10 @@ class MailTesterController extends DefaultController
      */
     public function send(Request $request)
     {
-        $this->initServices();
         $this->request = $request;
 
-        try {
-            $this->authenticationService->handle($request);
-        } catch (ValidateFailed $exception) {
-            return $exception->render();
+        if ($response = $this->checkAuthentication($request)) {
+            return $response;
         }
 
         if (empty($email = $request->get('email'))) {

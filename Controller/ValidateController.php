@@ -2,7 +2,9 @@
 
 namespace OnePilot\ClientBundle\Controller;
 
-use OnePilot\ClientBundle\Exceptions\ValidateFailed;
+use OnePilot\ClientBundle\Classes\Composer;
+use OnePilot\ClientBundle\Classes\Files;
+use OnePilot\ClientBundle\Classes\LogsOverview;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +22,22 @@ class ValidateController extends DefaultController
         'mailer_user',
     ];
 
+    /** @var Composer */
+    protected $composer;
+
+    /** @var Files */
+    protected $files;
+
+    /** @var LogsOverview */
+    protected $logsOverview;
+
+    public function __construct(Composer $composer, Files $files, LogsOverview $logsOverview)
+    {
+        $this->composer = $composer;
+        $this->files = $files;
+        $this->logsOverview = $logsOverview;
+    }
+
     /**
      * @param Request $request
      *
@@ -27,20 +45,17 @@ class ValidateController extends DefaultController
      */
     public function index(Request $request)
     {
-        $this->initServices();
-
-        try {
-            $this->authenticationService->handle($request);
-        } catch (ValidateFailed $exception) {
-            return $exception->render();
+        if ($response = $this->checkAuthentication($request)) {
+            return $response;
         }
 
         return new JsonResponse([
             'core'    => $this->getCore(),
             'servers' => $this->getServers(),
-            'plugins' => $this->composerService->getPackagesData(),
+            'plugins' => $this->composer->getPackagesData(),
             'extra'   => $this->getExtra(),
-            'files'   => $this->fileService->getFilesProperties(),
+            'files'   => $this->files->getFilesProperties(),
+            'errors'  => $this->errorsOverview(),
         ]);
     }
 
@@ -49,7 +64,7 @@ class ValidateController extends DefaultController
      */
     private function getCore()
     {
-        $symfony = $this->composerService->getLatestPackageVersion('symfony/symfony', Kernel::VERSION);
+        $symfony = $this->composer->getLatestPackageVersion('symfony/symfony', Kernel::VERSION);
 
         return [
             'version'                => Kernel::VERSION,
@@ -102,5 +117,13 @@ class ValidateController extends DefaultController
         }
 
         return $extra;
+    }
+
+    private function errorsOverview()
+    {
+        try {
+            return $this->logsOverview->get();
+        } catch (\Exception $e) {
+        }
     }
 }

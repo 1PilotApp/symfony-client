@@ -2,7 +2,6 @@
 
 namespace OnePilot\ClientBundle\Controller;
 
-use OnePilot\ClientBundle\Exceptions\ValidateFailed;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,12 +15,8 @@ class PingController extends DefaultController
      */
     public function index(Request $request)
     {
-        $this->initServices();
-
-        try {
-            $this->authenticationService->handle($request);
-        } catch (ValidateFailed $exception) {
-            return $exception->render();
+        if ($response = $this->checkAuthentication($request)) {
+            return $response;
         }
 
         return new JsonResponse(["message" => "pong"]);

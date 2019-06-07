@@ -2,25 +2,22 @@
 
 namespace OnePilot\ClientBundle\Controller;
 
+use OnePilot\ClientBundle\Exceptions\ValidateFailed;
+use OnePilot\ClientBundle\Middlewares\Authentication;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
-    /** @var \OnePilot\ClientBundle\Middlewares\Authentication */
-    protected $authenticationService;
-
-    /** @var \OnePilot\ClientBundle\Classes\Composer */
-    protected $composerService;
-
-    /** @var \OnePilot\ClientBundle\Classes\Files */
-    protected $fileService;
-
-    protected function initServices()
+    protected function checkAuthentication(Request $request)
     {
-        $this->authenticationService = $this->get('one_pilot_client.service.authentication');
+        /** @var Authentication $authentication */
+        $authentication = $this->get('one_pilot_client.service.authentication');
 
-        $this->composerService = $this->get('one_pilot_client.service.composer');
-
-        $this->fileService = $this->get('one_pilot_client.service.files');
+        try {
+            $authentication->handle($request);
+        } catch (ValidateFailed $exception) {
+            return $exception->render();
+        }
     }
 }
