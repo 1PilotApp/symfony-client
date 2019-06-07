@@ -40,14 +40,13 @@ class MailTesterController extends DefaultController
             ], 400);
         }
 
-//        @todo check if one_pilot_mail_from_address parameter is defined
-//        if (empty($this->get('one_pilot_mail_from_address'))) {
-//            return new JsonResponse([
-//                'message' => '`one_pilot_mail_from_address` parameter not defined',
-//                'status'  => 400,
-//                'data'    => [],
-//            ], 400);
-//        }
+        if (empty($this->getParameter('one_pilot_client.mail_from_address'))) {
+            return new JsonResponse([
+                'message' => '`one_pilot_mail_from_address` parameter not defined',
+                'status'  => 500,
+                'data'    => [],
+            ], 500);
+        }
 
         try {
             /** @var Swift_Mailer $mailer */
@@ -96,7 +95,7 @@ class MailTesterController extends DefaultController
 
         // InvalidArgumentException : Malformed UTF-8 characters, possibly incorrectly encoded
         $message = (new Swift_Message('Test send by 1Pilot.io for ensure emails are properly sent'))
-            ->setFrom("from@example.com") // @todo replace by value of one_pilot_mail_from_address
+            ->setFrom($this->getParameter('one_pilot_client.mail_from_address'))
             ->setTo($email)
             ->setBody(<<<EOF
 This email was automatically sent by the 1Pilot Client installed on $siteUrl.
