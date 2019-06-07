@@ -75,11 +75,13 @@ The `no-scripts` option is required to prevent errors, because you need to setup
     ```
     one_pilot_client:
         private_key: "%one_pilot_private_key%"
+        mail_from_address: "%one_pilot_mail_from_address%"
     ```
 
 2. add to your `app/config/parameters.yml.dist` file the following parameter:
     ```
         one_pilot_private_key: ~
+        one_pilot_mail_from_address: ~
     ```
     
    This defines the new required configuration parameter.
@@ -88,9 +90,12 @@ The `no-scripts` option is required to prevent errors, because you need to setup
 
     ```
         one_pilot_private_key: [your key]
+        one_pilot_mail_from_address: [mail from address used by verification tool]
     ```
     
     > `one_pilot_private_key` can be any random alphanumeric string. If you are not sure what key to use, go to 1Pilot dashboard and open the page to add a new site: a random key will be generated for you, and you can copy / paste it in your file. Of course you are free to create a totally different key, just make sure you have the same key in your `parameters.yml` and on the 1Pilot dashboard.
+
+    > `one_pilot_email_check_from_address` email address that you use for send mail from your application. It's used by the email verification tool for ensure emails are properly send by your application. 
 
 4. add to your `app/config/routing.yml` the following configuration:
     ```
@@ -114,13 +119,17 @@ You are now ready to add the site to your [1Pilot dashboard](https://app.1pilot.
     ```
     one_pilot_client:
         private_key: "%env(ONE_PILOT_PRIVATE_KEY)%"
+        mail_from_address: "%env(ONE_PILOT_MAIL_FROM_ADDRESS)%"
     ```
 
 2. add to your `.env` file the following parameters:
     ```    
     ONE_PILOT_PRIVATE_KEY=[your key]
+    ONE_PILOT_MAIL_FROM_ADDRESS: [mail from address used by verification tool]
     ```
     > `ONE_PILOT_PRIVATE_KEY` can be any random alphanumeric string. If you are not sure what key to use, go to 1Pilot dashboard and open the page to add a new site: a random key will be generated for you, and you can copy / paste it in your file. Of course you are free to create a totally different key, just make sure you have the same key in your `.env` and on the 1Pilot dashboard. 
+
+    > `ONE_PILOT_MAIL_FROM_ADDRESS` email address that you use for send mail from your application. It's used by the email verification tool for ensure emails are properly send by your application. 
 
 3. add to your `config/routes.yaml` the following configuration:
     ```

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
 <routes xmlns="http://symfony.com/schema/routing"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
     <route id="one_pilot_ping" path="/onepilot/ping">
-        <default key="_controller">OnePilot\ClientBundle\Controller\DefaultController::ping</default>
+        <default key="_controller">OnePilot\ClientBundle\Controller\PingController::index</default>
     </route>
     <route id="one_pilot_validate" path="/onepilot/validate">
-        <default key="_controller">OnePilot\ClientBundle\Controller\DefaultController::validate</default>
+        <default key="_controller">OnePilot\ClientBundle\Controller\ValidateController::index</default>
+    </route>
+    <route id="one_pilot_mailtester" path="/onepilot/mail-tester">
+        <default key="_controller">OnePilot\ClientBundle\Controller\MailTesterController::send</default>
     </route>
 </routes>
