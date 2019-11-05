@@ -7,10 +7,8 @@ use Composer\Semver\VersionParser;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Collection;
-use Symfony\Component\Cache\Simple\FilesystemCache;
 use OnePilot\ClientBundle\Contracts\PackageDetector;
 use OnePilot\ClientBundle\Traits\Instantiable;
-use Psr\SimpleCache\InvalidArgumentException;
 
 class Composer
 {
@@ -25,9 +23,6 @@ class Composer
     /** @var array */
     protected $packagist = [];
 
-    /** @var FilesystemCache */
-    protected $cache;
-
     /**
      * Composer constructor.
      *
@@ -35,8 +30,6 @@ class Composer
      */
     public function __construct(PackageDetector $detector)
     {
-        $this->cache = new FilesystemCache();
-
         self::$installedPackages = $detector->getPackages();
 
         self::$packagesConstraints = $detector->getPackagesConstraints();
@@ -55,25 +48,23 @@ class Composer
             ->chunk(50)
             ->each(function (Collection $chunk) use (&$packages) {
                 $promises = [];
-                $client = new Client();
+                $client = new Client(['allow_redirects' => false]);
 
                 $chunk
                     ->filter(function ($package) {
                         return !empty($package->version) && !empty($package->name);
                     })
                     ->each(function ($package) use (&$packages, &$promises, $client) {
-
-                        if ($this->isCached($package)) {
-                            $packages[] = $this->generatePackageData($package);
-
-                            return;
-                        }
-
                         $promises[$package->name] = $client
                             ->getAsync($this->getPackagistDetailUrl($package->name))
                             ->then(function (Response $response) use (&$packages, $package) {
-                                $this->storePackagistVersions($package->name, $response->getBody());
+                                if ($response->getStatusCode() === 200) {
+                                    $this->storePackagistVersions($package->name, $response->getBody());
+                                }
 
+                                $packages[] = $this->generatePackageData($package);
+                            }, function ($e) use (&$packages, $package) {
+                                // if fail re-try with file_get_contents (@see self::getVersionsFromPackagist)
                                 $packages[] = $this->generatePackageData($package);
                             });
                     });
@@ -94,29 +85,13 @@ class Composer
      */
     public function getLatestPackageVersion($packageName, $currentVersion = null)
     {
-        $cacheKey = $this->getCacheKey($packageName, $currentVersion);
-        if ($this->cache->has($cacheKey)) {
-            try {
-                return $this->cache->get($cacheKey);
-            } catch (InvalidArgumentException $ex) {
-                // @todo log error
-            }
-        }
-
         $packages = $this->getLatestPackage($packageName);
-        $collection = collect($packages)->map(function ($package) use ($currentVersion) {
+
+        return collect($packages)->map(function ($package) use ($currentVersion) {
             $version = $this->removePrefix(optional($package)->version);
 
             return $version == $currentVersion ? null : $version;
         });
-
-        try {
-            $this->cache->set($cacheKey, $collection, 10);
-        } catch (InvalidArgumentException $ex) {
-            // @todo log error
-        }
-
-        return $collection;
     }
 
     /**
@@ -135,8 +110,8 @@ class Composer
             'type' => 'package',
             'active' => 1,
             'version' => $currentVersion,
-            'new_version' => $latestVersion['compatible'],
-            'last_available_version' => $latestVersion['available'],
+            'new_version' => $latestVersion['compatible'] ?? null,
+            'last_available_version' => $latestVersion['available'] ?? null,
         ];
     }
 
@@ -173,6 +148,7 @@ class Composer
             }
 
             if (empty($packageConstraints)) {
+                $lastCompatibleVersion = $lastAvailableVersion;
                 continue;
             }
 
@@ -224,7 +200,7 @@ class Composer
 
     private function getPackagistDetailUrl(string $packageName): string
     {
-        return 'https://packagist.org/packages/'.$packageName.'.json';
+        return 'https://packagist.org/packages/' . $packageName . '.json';
     }
 
     private function storePackagistVersions(string $package, string $response)
@@ -252,26 +228,5 @@ class Composer
         }
 
         return $versions;
-    }
-
-    /**
-     * @param string $packageName
-     * @param string $currentVersion
-     *
-     * @return string
-     */
-    private function getCacheKey($packageName, $currentVersion)
-    {
-        return 'onepilot-getLatestPackageVersion-'.md5($packageName.$currentVersion);
-    }
-
-    /**
-     * @param $package
-     *
-     * @return bool
-     */
-    private function isCached($package)
-    {
-        return $this->cache->has($this->getCacheKey($package->name, $this->removePrefix($package->version)));
     }
 }
