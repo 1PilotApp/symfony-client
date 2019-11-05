@@ -64,10 +64,8 @@ We searched the galaxy for a robust answer to our challenges, and found none. So
 ## Install
 
 ``` bash
-composer require 1pilotapp/symfony-client --no-scripts
+composer require 1pilotapp/symfony-client
 ```
-
-The `no-scripts` option is required to prevent errors, because you need to setup a few configuration parameters before being able to use the bundle.
 
 ### Symfony 3
 
