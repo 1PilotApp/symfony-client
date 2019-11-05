@@ -14,12 +14,8 @@ class ValidateController extends DefaultController
 {
     const CONFIGS_TO_MONITOR = [
         'database_host',
-        'database_port',
-        'database_name',
-        'database_user',
         'mailer_transport',
         'mailer_host',
-        'mailer_user',
     ];
 
     /** @var Composer */
