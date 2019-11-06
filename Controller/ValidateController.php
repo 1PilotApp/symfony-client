@@ -60,12 +60,14 @@ class ValidateController extends DefaultController
      */
     private function getCore()
     {
-        $symfony = $this->composer->getLatestPackageVersion('symfony/symfony', Kernel::VERSION);
+        $symfony = $this->composer->getNewCompatibleAndAvailableVersionsNumber(
+            'symfony/symfony', Kernel::VERSION
+        );
 
         return [
             'version'                => Kernel::VERSION,
-            'new_version'            => $symfony['compatible'],
-            'last_available_version' => $symfony['available'],
+            'new_version'            => $symfony['compatible'] ?? null,
+            'last_available_version' => $symfony['available'] ?? null,
         ];
     }
 

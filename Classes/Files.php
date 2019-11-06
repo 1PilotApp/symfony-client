@@ -61,9 +61,9 @@ class Files
             fclose($fp);
 
             $filesProperties[] = [
-                'path'     => $relativePath,
-                'size'     => $fstat['size'],
-                'mtime'    => $fstat['mtime'],
+                'path' => $relativePath,
+                'size' => $fstat['size'],
+                'mtime' => $fstat['mtime'],
                 'checksum' => md5_file($absolutePath),
             ];
         }
@@ -78,16 +78,16 @@ class Files
     {
         $configDirectory = Kernel::MAJOR_VERSION === 4 ? '/config/*' : '/app/config/*';
 
-        return collect(glob($this->projectRoot . $configDirectory))->mapWithKeys(function ($absolutePath) {
+        $files = [];
+
+        foreach (glob($this->projectRoot . $configDirectory) as $absolutePath) {
             if (is_dir($absolutePath)) {
-                return;
+                continue;
             }
 
-            $relativePath = str_replace($this->projectRoot . DIRECTORY_SEPARATOR, '', $absolutePath);
+            $files[$absolutePath] = str_replace($this->projectRoot . DIRECTORY_SEPARATOR, '', $absolutePath);
+        }
 
-            return [
-                $absolutePath => $relativePath,
-            ];
-        })->toArray();
+        return $files;
     }
 }

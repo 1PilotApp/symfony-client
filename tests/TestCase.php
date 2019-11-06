@@ -42,7 +42,6 @@ abstract class TestCase extends BaseTestCase
         $this->client = $this->container->get('test.client');
 
         FakePackageDetector::setPackagesFromPath(__DIR__ . '/data/composer/installed-packages-light.json');
-        FakePackageDetector::generatePackagesConstraints();
     }
 
     /**

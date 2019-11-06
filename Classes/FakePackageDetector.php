@@ -2,72 +2,43 @@
 
 namespace OnePilot\ClientBundle\Classes;
 
-use Illuminate\Support\Collection;
 use OnePilot\ClientBundle\Contracts\PackageDetector;
 
-class FakePackageDetector implements PackageDetector
+class FakePackageDetector extends PackageDetectorAbstract implements PackageDetector
 {
-    /** @var Collection $packages */
+    /** @var array $packages */
     private static $packages;
 
-    /** @var Collection $packagesConstraints */
+    /** @var array $packagesConstraints */
     private static $packagesConstraints;
 
-    public function getPackages(): Collection
+    public function getPackages(): array
     {
         return self::$packages;
     }
 
-    public function getPackagesConstraints(): Collection
+    public function getPackagesConstraints(): array
     {
-        return self::$packagesConstraints;
+        return self::$packagesConstraints ?: parent::getPackagesConstraints();
     }
 
-    public static function setPackages(Collection $collection)
+    public static function setPackages(array $array)
     {
-        self::$packages = $collection;
+        self::$packages = $array;
     }
 
     public static function setPackagesFromArray(array $array)
     {
-        self::setPackages(collect(json_decode(json_encode($array))));
+        self::setPackages(json_decode(json_encode($array)));
     }
 
     public static function setPackagesFromPath(string $path)
     {
-        self::setPackages(collect(json_decode(file_get_contents($path))));
+        self::setPackages(json_decode(file_get_contents($path)));
     }
 
-    public static function setPackagesConstraints(Collection $collection)
+    public static function setPackagesConstraints(array $array)
     {
-        self::$packagesConstraints = $collection;
-    }
-
-    public static function generatePackagesConstraints()
-    {
-        $composers = self::$packages
-            ->filter()
-            ->map(function ($package) {
-                return $package->require ?? null;
-            })
-            ->filter();
-
-        $constraints = [];
-
-        foreach ($composers as $packages) {
-            foreach ($packages as $package => $constraint) {
-                if (strpos($package, '/') === false) {
-                    continue;
-                }
-
-                if (!isset($constraints[$package])) {
-                    $constraints[$package] = [];
-                }
-
-                $constraints[$package][] = $constraint;
-            }
-        }
-
-        self::$packagesConstraints = collect($constraints);
+        self::$packagesConstraints = $array;
     }
 }

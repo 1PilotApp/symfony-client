@@ -6,7 +6,6 @@ use Composer\Semver\Semver;
 use Composer\Semver\VersionParser;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
-use Illuminate\Support\Collection;
 use OnePilot\ClientBundle\Contracts\PackageDetector;
 use OnePilot\ClientBundle\Traits\Instantiable;
 
@@ -17,7 +16,7 @@ class Composer
     /** @var array */
     protected static $installedPackages;
 
-    /** @var \Illuminate\Support\Collection */
+    /** @var array */
     protected static $packagesConstraints;
 
     /** @var array */
@@ -43,55 +42,58 @@ class Composer
     public function getPackagesData()
     {
         $packages = [];
+        $chunks = array_chunk(self::$installedPackages, 50, true);
 
-        collect(self::$installedPackages)
-            ->chunk(50)
-            ->each(function (Collection $chunk) use (&$packages) {
-                $promises = [];
-                $client = new Client(['allow_redirects' => false]);
+        foreach ($chunks as $chunk) {
+            $promises = [];
+            $client = new Client(['allow_redirects' => false]);
 
-                $chunk
-                    ->filter(function ($package) {
-                        return !empty($package->version) && !empty($package->name);
-                    })
-                    ->each(function ($package) use (&$packages, &$promises, $client) {
-                        $promises[$package->name] = $client
-                            ->getAsync($this->getPackagistDetailUrl($package->name))
-                            ->then(function (Response $response) use (&$packages, $package) {
-                                if ($response->getStatusCode() === 200) {
-                                    $this->storePackagistVersions($package->name, $response->getBody());
-                                }
+            foreach ($chunk as $package) {
+                if (empty($package->version) || empty($package->name)) {
+                    continue;
+                }
 
-                                $packages[] = $this->generatePackageData($package);
-                            }, function ($e) use (&$packages, $package) {
-                                // if fail re-try with file_get_contents (@see self::getVersionsFromPackagist)
-                                $packages[] = $this->generatePackageData($package);
-                            });
+                $promises[$package->name] = $client
+                    ->getAsync($this->getPackagistDetailUrl($package->name))
+                    ->then(function (Response $response) use (&$packages, $package) {
+                        if ($response->getStatusCode() === 200) {
+                            $this->storePackagistVersions($package->name, $response->getBody());
+                        }
+
+                        $packages[] = $this->generatePackageData($package);
+                    }, function ($e) use (&$packages, $package) {
+                        // if fail re-try with file_get_contents (@see self::getVersionsFromPackagist)
+                        $packages[] = $this->generatePackageData($package);
                     });
+            }
 
-                \GuzzleHttp\Promise\settle($promises)->wait();
-            });
+            \GuzzleHttp\Promise\settle($promises)->wait();
+        }
 
         return $packages;
     }
 
     /**
-     * Get latest (stable) version number of composer package
+     * Get new compatible (follow constraints) & available versions number of a package
+     * Only version not equals to current version are returned
      *
      * @param string $packageName    The name of the package as registered on packagist, e.g. 'laravel/framework'
      * @param string $currentVersion If provided will ignore this version (if last one is $currentVersion will return null)
      *
      * @return array ['compatible' => $version, 'available' => $version]
      */
-    public function getLatestPackageVersion($packageName, $currentVersion = null)
+    public function getNewCompatibleAndAvailableVersionsNumber($packageName, $currentVersion = null)
     {
-        $packages = $this->getLatestPackage($packageName);
+        if (empty($versions = $this->getLatestCompatibleAndAvailableVersions($packageName))) {
+            return null;
+        }
 
-        return collect($packages)->map(function ($package) use ($currentVersion) {
-            $version = $this->removePrefix(optional($package)->version);
+        foreach ($versions as $key => $value) {
+            $version = $this->removePrefix($value->version ?? null);
+            $versions[$key] = $version == $currentVersion ? null : $version;
+        }
 
-            return $version == $currentVersion ? null : $version;
-        });
+        return $versions;
     }
 
     /**
@@ -102,10 +104,10 @@ class Composer
     private function generatePackageData($package)
     {
         $currentVersion = $this->removePrefix($package->version);
-        $latestVersion = $this->getLatestPackageVersion($package->name, $currentVersion);
+        $latestVersion = $this->getNewCompatibleAndAvailableVersionsNumber($package->name, $currentVersion);
 
         return [
-            'name' => str_after($package->name, '/'),
+            'name' => Helpers::strAfter($package->name, '/'),
             'code' => $package->name,
             'type' => 'package',
             'active' => 1,
@@ -116,13 +118,13 @@ class Composer
     }
 
     /**
-     * Get latest (stable) package from packagist
+     * Get latest compatible (follow constraints) & available versions objects of a package
      *
      * @param string $packageName , the name of the package as registered on packagist, e.g. 'laravel/framework'
      *
      * @return array ['compatible' => (object) $version, 'available' => (object) $version]
      */
-    private function getLatestPackage($packageName)
+    private function getLatestCompatibleAndAvailableVersions($packageName)
     {
         if (empty($versions = $this->getVersionsFromPackagist($packageName))) {
             return null;
@@ -131,7 +133,7 @@ class Composer
         $lastCompatibleVersion = null;
         $lastAvailableVersion = null;
 
-        $packageConstraints = self::$packagesConstraints->get($packageName);
+        $packageConstraints = self::$packagesConstraints[$packageName] ?? null;
 
         foreach ($versions as $versionData) {
             $versionNumber = $versionData->version;
@@ -180,7 +182,7 @@ class Composer
      */
     private function removePrefix($version, $prefix = 'v')
     {
-        if (empty($version) || !starts_with($version, $prefix)) {
+        if (empty($version) || !Helpers::strStartsWith($version, $prefix)) {
             return $version;
         }
 
@@ -212,7 +214,7 @@ class Composer
 
     private function getVersionsFromPackagist(string $package)
     {
-        if (empty($versions = array_get($this->packagist, $package))) {
+        if (empty($versions = $this->packagist[$package] ?? null)) {
             try {
                 $packagistInfo = json_decode(file_get_contents($this->getPackagistDetailUrl($package)));
                 $versions = $packagistInfo->package->versions;

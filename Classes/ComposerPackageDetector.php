@@ -2,10 +2,9 @@
 
 namespace OnePilot\ClientBundle\Classes;
 
-use Illuminate\Support\Collection;
 use OnePilot\ClientBundle\Contracts\PackageDetector;
 
-class ComposerPackageDetector implements PackageDetector
+class ComposerPackageDetector extends PackageDetectorAbstract implements PackageDetector
 {
     /** @var string */
     private $projectRoot;
@@ -20,45 +19,15 @@ class ComposerPackageDetector implements PackageDetector
         $this->projectRoot = $projectRoot;
     }
 
-
-    public function getPackages(): Collection
+    public function getPackages(): array
     {
         $installedJsonFile = $this->projectRoot . '/vendor/composer/installed.json';
         $installedPackages = json_decode(file_get_contents($installedJsonFile));
 
-        return collect($installedPackages);
+        return $installedPackages;
     }
 
-    public function getPackagesConstraints(): Collection
-    {
-        $composers = $this->getPackages()
-            ->push($this->appComposerData())
-            ->filter()
-            ->map(function ($package) {
-                return $package->require ?? null;
-            })
-            ->filter();
-
-        $constraints = [];
-
-        foreach ($composers as $packages) {
-            foreach ($packages as $package => $constraint) {
-                if (strpos($package, '/') === false) {
-                    continue;
-                }
-
-                if (!isset($constraints[$package])) {
-                    $constraints[$package] = [];
-                }
-
-                $constraints[$package][] = $constraint;
-            }
-        }
-
-        return collect($constraints);
-    }
-
-    private function appComposerData()
+    protected function projectComposerContent()
     {
         if (!file_exists($this->projectRoot . '/composer.json')) {
             return null;

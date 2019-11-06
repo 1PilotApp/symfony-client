@@ -2,7 +2,6 @@
 
 namespace OnePilot\ClientBundle\Tests\Integration;
 
-use Illuminate\Support\Collection;
 use OnePilot\ClientBundle\Classes\Composer;
 use OnePilot\ClientBundle\Classes\FakePackageDetector;
 use OnePilot\ClientBundle\Tests\TestCase;
@@ -12,13 +11,12 @@ class ComposerUpdatesTest extends TestCase
     /** @test */
     public function laravel_55()
     {
-        FakePackageDetector::setPackagesFromPath(__DIR__.'/../data/composer/laravel55-installed-packages.json');
-        FakePackageDetector::generatePackagesConstraints();
+        FakePackageDetector::setPackagesFromPath(__DIR__ . '/../data/composer/laravel55-installed-packages.json');
 
         /** @var FakePackageDetector $packageDetector */
         $packageDetector = $this->container->get('one_pilot_client.service.fake_package_detector');
 
-        $packages = collect((new Composer($packageDetector))->getPackagesData());
+        $packages = (new Composer($packageDetector))->getPackagesData();
 
         $laravelFramework = $this->findPackage($packages, 'laravel/framework');
 
@@ -36,13 +34,12 @@ class ComposerUpdatesTest extends TestCase
     /** @test */
     public function laravel_56()
     {
-        FakePackageDetector::setPackagesFromPath(__DIR__.'/../data/composer/laravel56-installed-packages.json');
-        FakePackageDetector::generatePackagesConstraints();
+        FakePackageDetector::setPackagesFromPath(__DIR__ . '/../data/composer/laravel56-installed-packages.json');
 
         /** @var FakePackageDetector $packageDetector */
         $packageDetector = $this->container->get('one_pilot_client.service.fake_package_detector');
 
-        $packages = collect((new Composer($packageDetector))->getPackagesData());
+        $packages = (new Composer($packageDetector))->getPackagesData();
 
         $laravelFramework = $this->findPackage($packages, 'laravel/framework');
 
@@ -65,13 +62,12 @@ class ComposerUpdatesTest extends TestCase
     /** @test */
     public function laravel_57()
     {
-        FakePackageDetector::setPackagesFromPath(__DIR__.'/../data/composer/laravel57-installed-packages.json');
-        FakePackageDetector::generatePackagesConstraints();
+        FakePackageDetector::setPackagesFromPath(__DIR__ . '/../data/composer/laravel57-installed-packages.json');
 
         /** @var FakePackageDetector $packageDetector */
         $packageDetector = $this->container->get('one_pilot_client.service.fake_package_detector');
 
-        $packages = collect((new Composer($packageDetector))->getPackagesData());
+        $packages = (new Composer($packageDetector))->getPackagesData();
 
         $laravelFramework = $this->findPackage($packages, 'laravel/framework');
 
@@ -95,31 +91,29 @@ class ComposerUpdatesTest extends TestCase
     {
         FakePackageDetector::setPackagesFromArray([
             [
-                'name'    => 'composer/semver',
+                'name' => 'composer/semver',
                 'version' => '1.4.0',
                 'require' => ['php' => '>=7.0.0'],
             ],
             [
-                'name'    => 'laravel/socialite',
+                'name' => 'laravel/socialite',
                 'version' => '3.2.0',
             ],
             [
-                'name'    => 'laravel/nova',
+                'name' => 'laravel/nova',
                 'version' => '1.0.1',
             ],
             [
-                'name'    => '1pilotapp/unknown',
+                'name' => '1pilotapp/unknown',
                 'version' => '1.0.1',
                 'require' => ['laravel/socialite' => '^3.2'],
             ],
         ]);
 
-        FakePackageDetector::generatePackagesConstraints();
-
         /** @var FakePackageDetector $packageDetector */
         $packageDetector = $this->container->get('one_pilot_client.service.fake_package_detector');
 
-        $packages = collect((new Composer($packageDetector))->getPackagesData());
+        $packages = (new Composer($packageDetector))->getPackagesData();
 
         $this->assertCount(4, $packages);
 
@@ -138,10 +132,12 @@ class ComposerUpdatesTest extends TestCase
         $this->assertNull($laravelNova['last_available_version']);
     }
 
-    private function findPackage(Collection $packages, string $name)
+    private function findPackage($packages, string $name)
     {
-        return $packages->first(function ($package) use ($name) {
-            return $package['code'] === $name;
-        });
+        foreach ($packages as $package) {
+            if ($package['code'] === $name) {
+                return $package;
+            }
+        }
     }
 }
