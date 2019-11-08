@@ -33,4 +33,4 @@ before_script:
   - travis_retry composer require "symfony/framework-bundle:${SYMFONY}" --no-interaction --prefer-dist
 
 script:
-  - phpunit
+  - composer test
