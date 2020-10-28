@@ -5,7 +5,9 @@ namespace OnePilot\ClientBundle\Controller;
 use OnePilot\ClientBundle\Classes\Composer;
 use OnePilot\ClientBundle\Classes\Files;
 use OnePilot\ClientBundle\Classes\LogsOverview;
+use OnePilot\ClientBundle\Middlewares\Authentication;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Kernel;
@@ -14,8 +16,6 @@ class ValidateController extends DefaultController
 {
     const CONFIGS_TO_MONITOR = [
         'database_host',
-        'mailer_transport',
-        'mailer_host',
     ];
 
     /** @var Composer */
@@ -27,11 +27,21 @@ class ValidateController extends DefaultController
     /** @var LogsOverview */
     protected $logsOverview;
 
-    public function __construct(Composer $composer, Files $files, LogsOverview $logsOverview)
-    {
+    /** @var ParameterBagInterface */
+    protected $params;
+
+    public function __construct(
+        Composer $composer,
+        Files $files,
+        LogsOverview $logsOverview,
+        ParameterBagInterface $params,
+        Authentication $authentication
+    ) {
         $this->composer = $composer;
         $this->files = $files;
         $this->logsOverview = $logsOverview;
+        $this->params = $params;
+        $this->authentication = $authentication;
     }
 
     /**
@@ -46,12 +56,12 @@ class ValidateController extends DefaultController
         }
 
         return new JsonResponse([
-            'core'    => $this->getCore(),
+            'core' => $this->getCore(),
             'servers' => $this->getServers(),
             'plugins' => $this->composer->getPackagesData(),
-            'extra'   => $this->getExtra(),
-            'files'   => $this->files->getFilesProperties(),
-            'errors'  => $this->errorsOverview(),
+            'extra' => $this->getExtra(),
+            'files' => $this->files->getFilesProperties(),
+            'errors' => $this->errorsOverview(),
         ]);
     }
 
@@ -65,8 +75,8 @@ class ValidateController extends DefaultController
         );
 
         return [
-            'version'                => Kernel::VERSION,
-            'new_version'            => $symfony['compatible'] ?? null,
+            'version' => Kernel::VERSION,
+            'new_version' => $symfony['compatible'] ?? null,
             'last_available_version' => $symfony['available'] ?? null,
         ];
     }
@@ -89,8 +99,8 @@ class ValidateController extends DefaultController
         }
 
         return [
-            'php'   => phpversion(),
-            'web'   => $serverWeb,
+            'php' => phpversion(),
+            'web' => $serverWeb,
             'mysql' => $dbVersion,
         ];
     }
@@ -101,14 +111,14 @@ class ValidateController extends DefaultController
     private function getExtra()
     {
         $extra = [
-            'storage_dir_writable' => is_writable($this->getParameter('kernel.logs_dir')),
-            'cache_dir_writable'   => is_writable($this->getParameter('kernel.cache_dir')),
-            'app.env'              => $this->getParameter('kernel.environment'),
+            'storage_dir_writable' => is_writable($this->params->get('kernel.logs_dir')),
+            'cache_dir_writable' => is_writable($this->params->get('kernel.cache_dir')),
+            'app.env' => $this->params->get('kernel.environment'),
         ];
 
         foreach (self::CONFIGS_TO_MONITOR as $config) {
             try {
-                $extra[$config] = $this->getParameter($config);
+                $extra[$config] = $this->params->get($config);
             } catch (InvalidArgumentException $ex) {
                 $extra[$config] = null;
             }

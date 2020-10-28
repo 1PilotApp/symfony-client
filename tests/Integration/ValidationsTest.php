@@ -47,6 +47,17 @@ class ValidationsTest extends TestCase
         $this->assertEquals($this->container->getParameter('kernel.environment'), $extra['app.env']);
     }
 
+    /** @test */
+    public function packages()
+    {
+        $plugins = $this->getDecodedData('plugins');
+
+        $pluginsCode = array_column($plugins, 'code');
+
+        $this->assertContains('composer/semver', $pluginsCode);
+        $this->assertContains('guzzlehttp/guzzle', $pluginsCode);
+    }
+
     /**
      * @param string|null $section
      *

@@ -116,6 +116,8 @@ class LogsBrowser extends LogsFiles
                 continue;
             }
 
+            $date = str_replace('T', ' ', $date);
+
             if (!$this->matchFilters($date, $level, $message)) {
                 continue;
             }

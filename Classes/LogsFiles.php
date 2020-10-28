@@ -11,8 +11,10 @@ abstract class LogsFiles
      * match following formats
      *  [%datetime%] %channel%.%level%: %message% %context% %extra%
      *  [%datetime%+%offset%] %level% %message%
+     *
+     * %datetime% supported format 2019-06-07 10:08:58 and 2020-10-16T06:58:06.942853+00:00
      */
-    const LOG_PATTERN = '#\[(?<date>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})(?>[\+-]\d{4})?\]\s{1}(?>(?<channel>[^\s:\-]+)\.)?(?<level>\w+)(?>\:)?\s(?<message>.*)#';
+    const LOG_PATTERN = '#\[(?<date>\d{4}-\d{2}-\d{2}(?> |T)\d{2}:\d{2}:\d{2})(?>\.\d{6})?(?>[\+-](?>\d{4}|\d{2}:\d{2}))?\]\s{1}(?>(?<channel>[^\s:\-]+)\.)?(?<level>\w+)(?>\:)?\s(?<message>.*)#';
 
     const LEVELS = [
         'emergency',

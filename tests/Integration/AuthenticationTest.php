@@ -106,7 +106,7 @@ class AuthenticationTest extends TestCase
     {
         $this->setTimestamp(1500000000);
 
-        $this->container->get('one_pilot_client.service.authentication')->setSkipTimeValidation(true);
+        $this->container->get('OnePilot\ClientBundle\Middlewares\Authentication')->setSkipTimeValidation(true);
 
         $this->client->request('GET', '/onepilot/ping', [], [], $this->authenticationHeaders());
         $response = $this->client->getResponse();

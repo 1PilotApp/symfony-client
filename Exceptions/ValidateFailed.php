@@ -11,6 +11,14 @@ class ValidateFailed extends Exception
     /**
      * @return ValidateFailed
      */
+    public static function authenticationNotInjected()
+    {
+        return new static('1Pilot authentication service was not properly injected');
+    }
+
+    /**
+     * @return ValidateFailed
+     */
     public static function missingSignature()
     {
         return new static('The request did not contain a header named `HTTP_HASH`.');
@@ -53,5 +61,4 @@ class ValidateFailed extends Exception
             'data' => [],
         ], 400);
     }
-
 }

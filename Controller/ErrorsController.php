@@ -3,6 +3,7 @@
 namespace OnePilot\ClientBundle\Controller;
 
 use OnePilot\ClientBundle\Classes\LogsBrowser;
+use OnePilot\ClientBundle\Middlewares\Authentication;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -11,9 +12,10 @@ class ErrorsController extends DefaultController
     /** @var */
     protected $browser;
 
-    public function __construct(LogsBrowser $browser)
+    public function __construct(LogsBrowser $browser, Authentication $authentication)
     {
         $this->browser = $browser;
+        $this->authentication = $authentication;
     }
 
     /**

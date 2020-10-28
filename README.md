@@ -5,7 +5,7 @@
 <p align="center">
 <a href="https://packagist.org/packages/1pilotapp/symfony-client"><img alt="Latest Version on Packagist" src="https://img.shields.io/packagist/v/1pilotapp/symfony-client.svg?style=flat-square"></a>
 <a href="https://github.com/1PilotApp/symfony-client/blob/master/LICENSE.md"><img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square"></a>
-<a href="https://travis-ci.org/1PilotApp/symfony-client"><img alt="Build Status" src="https://img.shields.io/travis/1PilotApp/symfony-client/master.svg?style=flat-square"></a>
+<a href="https://github.com/1PilotApp/symfony-client/actions"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/1PilotApp/symfony-client/tests?label=tests&style=flat-square"></a>
 <a href="https://packagist.org/packages/1PilotApp/symfony-client"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/1pilotapp/symfony-client.svg?style=flat-square"></a>
 </p>
 
@@ -63,11 +63,42 @@ We searched the galaxy for a robust answer to our challenges, and found none. So
 
 ## Install
 
+### Symfony 4 & 5
+
 ``` bash
-composer require 1pilotapp/symfony-client
+composer require 1pilotapp/symfony-client:^2.0
 ```
 
+1. add a new `config/packages/one_pilot_client.yaml` file with the following content:
+    ```
+    one_pilot_client:
+        private_key: "%env(ONE_PILOT_PRIVATE_KEY)%"
+        mail_from_address: "%env(ONE_PILOT_MAIL_FROM_ADDRESS)%"
+    ```
+
+2. add to your `.env` file the following parameters:
+    ```    
+    ONE_PILOT_PRIVATE_KEY=[your key]
+    ONE_PILOT_MAIL_FROM_ADDRESS=[mail from address used by verification tool]
+    ```
+    > `ONE_PILOT_PRIVATE_KEY` can be any random alphanumeric string. If you are not sure what key to use, go to 1Pilot dashboard and open the page to add a new site: a random key will be generated for you, and you can copy / paste it in your file. Of course you are free to create a totally different key, just make sure you have the same key in your `.env` and on the 1Pilot dashboard. 
+
+    > `ONE_PILOT_MAIL_FROM_ADDRESS` email address that you use for send mail from your application. It's used by the email verification tool for ensure emails are properly send by your application. 
+
+3. add to your `config/routes.yaml` the following configuration:
+    ```
+    one_pilot:
+        resource: "@OnePilotClientBundle/Resources/config/routing.xml"
+        prefix:   /
+    ```
+
+You are now ready to add the site to your [1Pilot dashboard](https://app.1pilot.io/sites/create)!
+
 ### Symfony 3
+
+``` bash
+composer require 1pilotapp/symfony-client:^1.0
+```
 
 1. add to your `app/config/config.yml` file the following configuration keys:
     ```
@@ -107,33 +138,6 @@ composer require 1pilotapp/symfony-client
     ...
     new OnePilot\ClientBundle\OnePilotClientBundle(),
     ...
-    ```
-
-You are now ready to add the site to your [1Pilot dashboard](https://app.1pilot.io/sites/create)!
-
-### Symfony 4
-
-1. add a new `config/packages/one_pilot_client.yaml` file with the following content:
-    ```
-    one_pilot_client:
-        private_key: "%env(ONE_PILOT_PRIVATE_KEY)%"
-        mail_from_address: "%env(ONE_PILOT_MAIL_FROM_ADDRESS)%"
-    ```
-
-2. add to your `.env` file the following parameters:
-    ```    
-    ONE_PILOT_PRIVATE_KEY=[your key]
-    ONE_PILOT_MAIL_FROM_ADDRESS=[mail from address used by verification tool]
-    ```
-    > `ONE_PILOT_PRIVATE_KEY` can be any random alphanumeric string. If you are not sure what key to use, go to 1Pilot dashboard and open the page to add a new site: a random key will be generated for you, and you can copy / paste it in your file. Of course you are free to create a totally different key, just make sure you have the same key in your `.env` and on the 1Pilot dashboard. 
-
-    > `ONE_PILOT_MAIL_FROM_ADDRESS` email address that you use for send mail from your application. It's used by the email verification tool for ensure emails are properly send by your application. 
-
-3. add to your `config/routes.yaml` the following configuration:
-    ```
-    one_pilot:
-        resource: "@OnePilotClientBundle/Resources/config/routing.xml"
-        prefix:   /
     ```
 
 You are now ready to add the site to your [1Pilot dashboard](https://app.1pilot.io/sites/create)!

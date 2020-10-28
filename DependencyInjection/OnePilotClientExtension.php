@@ -20,7 +20,7 @@ class OnePilotClientExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
-        $definition = $container->getDefinition('one_pilot_client.service.authentication');
+        $definition = $container->getDefinition('OnePilot\ClientBundle\Middlewares\Authentication');
         $definition->replaceArgument(0, $configs[0]['private_key'] ?? null);
         $definition->replaceArgument(1, $configs[0]['skip_timestamp_validation'] ?? false);
 

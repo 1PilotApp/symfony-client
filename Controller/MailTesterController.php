@@ -3,17 +3,26 @@
 namespace OnePilot\ClientBundle\Controller;
 
 use Exception;
-use Swift_Mailer;
-use Swift_Message;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use OnePilot\ClientBundle\Middlewares\Authentication;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 class MailTesterController extends DefaultController
 {
+    /** @var MailerInterface */
+    protected $mailer;
+
     /** @var Request */
     private $request;
+
+    public function __construct(Authentication $authentication, MailerInterface $mailer)
+    {
+        $this->authentication = $authentication;
+        $this->mailer = $mailer;
+    }
 
     /**
      * @param Request $request
@@ -31,37 +40,26 @@ class MailTesterController extends DefaultController
         if (empty($email = $request->get('email'))) {
             return new JsonResponse([
                 'message' => 'Email parameter is missing',
-                'status'  => 400,
-                'data'    => [],
+                'status' => 400,
+                'data' => [],
             ], 400);
         }
 
         if (empty($this->getParameter('one_pilot_client.mail_from_address'))) {
             return new JsonResponse([
                 'message' => '`one_pilot_mail_from_address` parameter not defined',
-                'status'  => 500,
-                'data'    => [],
+                'status' => 500,
+                'data' => [],
             ], 500);
         }
 
         try {
-            /** @var Swift_Mailer $mailer */
-            $mailer = $this->get('swiftmailer.mailer.default');
-        } catch (ServiceNotFoundException $e) {
-            return new JsonResponse([
-                'message' => 'SwiftMailer not installed',
-                'status'  => 500,
-                'data'    => [],
-            ], 400);
-        }
-
-        try {
-            $numberRecipients = $this->sendEmail($email, $mailer);
+            $this->sendEmail($email);
         } catch (Exception $e) {
             return new JsonResponse([
                 'message' => 'Error when sending email',
-                'status'  => 500,
-                'data'    => [
+                'status' => 500,
+                'data' => [
                     'previous' => [
                         'message' => $e->getMessage(),
                     ],
@@ -69,31 +67,22 @@ class MailTesterController extends DefaultController
             ], 500);
         }
 
-        if ($numberRecipients < 1) {
-            return new JsonResponse([
-                'message' => 'Error when sending email (message not sended)',
-                'status'  => 500,
-            ], 500);
-        }
-
         return new JsonResponse(['message' => 'Sent']);
     }
 
     /**
-     * @param               $email
-     * @param Swift_Mailer  $mailer
-     *
-     * @return int The number of successful recipients. Can be 0 which indicates failure
+     * @param $email
      */
-    protected function sendEmail($email, $mailer)
+    protected function sendEmail($email)
     {
         $siteUrl = $this->request->getSchemeAndHttpHost();
 
         // InvalidArgumentException : Malformed UTF-8 characters, possibly incorrectly encoded
-        $message = (new Swift_Message('Test send by 1Pilot.io for ensure emails are properly sent'))
-            ->setFrom($this->getParameter('one_pilot_client.mail_from_address'))
-            ->setTo($email)
-            ->setBody(<<<EOF
+        $message = (new Email())
+            ->from($this->getParameter('one_pilot_client.mail_from_address'))
+            ->to($email)
+            ->subject('Test send by 1Pilot.io for ensure emails are properly sent')
+            ->text(<<<EOF
 This email was automatically sent by the 1Pilot Client installed on $siteUrl.
 
 Ground control to Major Tom
@@ -150,6 +139,6 @@ David Bowie
 EOF
             );
 
-        return $mailer->send($message);
+        $this->mailer->send($message);
     }
 }

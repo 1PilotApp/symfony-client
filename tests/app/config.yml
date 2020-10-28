@@ -3,9 +3,12 @@ framework:
     test: ~
     router:
         resource: '%kernel.project_dir%/Resources/config/routing.xml'
+        utf8: true
     profiler:
         enabled: true
         collect: false
+    mailer:
+        dsn: 'null://null'
 
 monolog:
     handlers:
@@ -40,7 +43,7 @@ services:
         class: OnePilot\ClientBundle\Classes\FakePackageDetector
         public: true
 
-    one_pilot_client.service.authentication:
+    OnePilot\ClientBundle\Middlewares\Authentication:
         class: OnePilot\ClientBundle\Middlewares\Authentication
         public: true
         arguments: [ '%one_pilot_private_key%', '%one_pilot_skip_timestamp_validation%']
@@ -50,6 +53,3 @@ one_pilot_client:
     private_key: "%one_pilot_private_key%"
     mail_from_address: "%one_pilot_mail_from_address%"
     skip_timestamp_validation: "%one_pilot_skip_timestamp_validation%"
-
-swiftmailer:
-    disable_delivery: true
