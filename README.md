@@ -5,7 +5,7 @@
 <p align="center">
 <a href="https://packagist.org/packages/1pilotapp/symfony-client"><img alt="Latest Version on Packagist" src="https://img.shields.io/packagist/v/1pilotapp/symfony-client.svg?style=flat-square"></a>
 <a href="https://github.com/1PilotApp/symfony-client/blob/master/LICENSE.md"><img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square"></a>
-<a href="https://travis-ci.org/1PilotApp/symfony-client"><img alt="Build Status" src="https://img.shields.io/travis/1PilotApp/symfony-client/master.svg?style=flat-square"></a>
+<a href="https://github.com/1PilotApp/symfony-client/actions"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/1PilotApp/symfony-client/tests?label=tests&style=flat-square"></a>
 <a href="https://packagist.org/packages/1PilotApp/symfony-client"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/1pilotapp/symfony-client.svg?style=flat-square"></a>
 </p>
 
