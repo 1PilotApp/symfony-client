@@ -63,7 +63,7 @@ We searched the galaxy for a robust answer to our challenges, and found none. So
 
 ## Install
 
-### Symfony 4 & 5
+### Symfony 4.4 & 5
 
 ``` bash
 composer require 1pilotapp/symfony-client:^2.0
