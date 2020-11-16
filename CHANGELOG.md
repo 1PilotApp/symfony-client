@@ -2,7 +2,7 @@
 
 All notable changes to `symfony-client` will be documented in this file.
 
-## 2.0.0 - *upcoming*
+## 2.0.0 - 2020-11-16
 
 - Add support of Symfony 5.1
 - Add PHP 8.0 support
