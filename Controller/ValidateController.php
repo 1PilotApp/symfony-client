@@ -91,7 +91,7 @@ class ValidateController extends DefaultController
         $serverWeb = $_SERVER['SERVER_SOFTWARE'] ?? getenv('SERVER_SOFTWARE') ?? null;
 
         try {
-            $dbVersion = $this->get('doctrine.dbal.default_connection')
+            $dbVersion = $this->container->get('doctrine.dbal.default_connection')
                 ->executeQuery("select version() as version")
                 ->fetchColumn();
         } catch (\Exception $e) {
