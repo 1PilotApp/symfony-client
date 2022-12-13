@@ -71,7 +71,7 @@ class ValidateController extends DefaultController
     private function getCore()
     {
         $symfony = $this->composer->getNewCompatibleAndAvailableVersionsNumber(
-            'symfony/symfony', Kernel::VERSION
+            'symfony/framework-bundle', Kernel::VERSION
         );
 
         return [
@@ -91,7 +91,7 @@ class ValidateController extends DefaultController
         $serverWeb = $_SERVER['SERVER_SOFTWARE'] ?? getenv('SERVER_SOFTWARE') ?? null;
 
         try {
-            $dbVersion = $this->get('doctrine.dbal.default_connection')
+            $dbVersion = $this->container->get('doctrine.dbal.default_connection')
                 ->executeQuery("select version() as version")
                 ->fetchColumn();
         } catch (\Exception $e) {
