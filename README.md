@@ -25,45 +25,34 @@
   <a href="mailto:support@1pilot.io" target="_blank">Support</a>
 </p><br>
 
-<blockquote>
-<p><strong>[You]</strong> What are you, strange being?</p>
-<p><strong>[1Pilot]</strong> Greetings, traveller. I am 1Pilot. I am a tool created to monitor and manage earthbound Symfony applications.</p>
-<p><strong>[You]</strong> OK... What is your primary purpose?</p>
-<p><strong>[1Pilot]</strong> I was created to reduce the time you spend managing applications, so that you can focus on your primary mission.</p>
-<p><strong>[You]</strong> Wait, what? How could you know... What is my primary mission?</p>
-<p><strong>[1Pilot]</strong> My records indicate that your primary mission is ...searching database... to code in your underwear, jamming to Radiohead.</p>
-<p><strong>[You]</strong> 😲... 🤪... Sweet.</p>
-<p><strong>[1Pilot]</strong> Affirmative, traveller. ‘Sweet’.</p>
-</blockquote>
+## Everything you need to know in just one dashboard.
 
-... _Initiating introduction protocol_ ...  
+- **Uptime monitoring**<br> Get instant notifications about downtime and fix it before everyone else even knows it’s an issue.
 
-## Control all your applications from a single, powerful application monitoring tool.
+- **SSL certificate monitoring**<br> Keep track of certificates across all your applications and set reminders of their expiration dates.
+- **Config file and server version monitoring**<br> Be alerted when a config file is edited or when PHP, Database or WEB servers are updated.
 
-- **Uptime monitoring** - Get instant notifications about downtime and fix it before everyone else even knows it’s an issue.  
+- **Composer package management**<br> See installed composer packages across all your applications and track their updates. Know exactly when new versions are available and log a central history of all changes.
 
-- **SSL certificate monitoring** - Keep track of certificates across all your applications and set reminders of their expiration dates.  
-- **Config file and server version monitoring** - Be alerted when a config file is edited or when PHP, Database or WEB servers are updated.  
+- **Robust notification system**<br> Get instant notifications across email, Slack and Discord. Too much? Then create fully customisable alerts and summaries for each function and comms channel at a frequency that suits you.
 
-- **Composer package management** - See installed composer packages across all your applications and track their updates. Know exactly when new versions are available and log a central history of all changes.  
-  
-- **Robust notification system** - Get instant notifications across email, Slack and Discord. Too much? Then create fully customisable alerts and summaries for each function and comms channel at a frequency that suits you.  
-
-- **Full-featured 15-day trial** - Then $2/site/month with volume discounts available. No setup fees. No long-term contracts.  
-
-... _Introduction protocol complete_ ...
+- **Full-featured 15-day trial**<br> Then $2/site/month with volume discounts available. No setup fees. No long-term contracts.
 
 You have just discovered our advanced monitoring tool for your Symfony applications and all the individual sites that you manage. We have designed it as a central dashboard to harmonise the maintenance of your entire website roster. Because we believe that coders should be out there coding. Let computers monitor computers, so that we humans don’t have to worry about it.
 
 We searched the galaxy for a robust answer to our challenges, and found none. So, our team embarked on our greatest mission yet and 1Pilot was born.
 
-<a href="https://app.1pilot.io/register">Try it for free</a> without any limitations for 15 days. No credit card required.
+<p align="center">
+<a href="https://app.1pilot.io/register"><img src="https://1pilot.io/assets/images/repos/free_trial_2022.jpg" alt="Get your first site onboard in under 3 minutes! Start the 15-day full-feature trial"></a>
+</p>
 
-<a href="https://app.1pilot.io/register"><img src="https://user-images.githubusercontent.com/12028540/52998798-76510900-3424-11e9-9ad1-450ffc32f06a.jpg" alt="Get your first site onboard in under 3 minutes! Start the 15-day full-feature trial"></a>
+<p align="center">
+<a href="https://app.1pilot.io/register">Try it for free</a> without any limitations for 15 days. No credit card required.
+</p>
 
 ## Install
 
-### Symfony 4.4 & 5
+### Symfony 6, 5 & 4.4
 
 ``` bash
 composer require 1pilotapp/symfony-client:^2.0
