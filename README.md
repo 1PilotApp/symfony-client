@@ -20,8 +20,6 @@
   <span> · </span>
   <a href="https://docs.1pilot.io/api/introduction" target="_blank">API</a>
   <span> · </span>
-  <a href="https://1pilot.nolt.io" target="_blank">Feedback</a>
-  <span> · </span>
   <a href="mailto:support@1pilot.io" target="_blank">Support</a>
 </p><br>
 
@@ -39,6 +37,12 @@
 - **Robust notification system**<br> Get instant notifications across email, Slack and Discord. Too much? Then create fully customisable alerts and summaries for each function and comms channel at a frequency that suits you.
 
 - **Full-featured 15-day trial**<br> Then $2/site/month with volume discounts available. No setup fees. No long-term contracts.
+
+<p align="center">
+<br><a href="https://www.youtube.com/watch?v=-xmmjuPV5Dw" target="_blank">
+   <img width="480" src="https://1pilot.io/assets/images/repos/1pilot_github_video_w480.png" alt="Watch the demo">
+</a><br><br>
+</p>
 
 You have just discovered our advanced monitoring tool for your Symfony applications and all the individual sites that you manage. We have designed it as a central dashboard to harmonise the maintenance of your entire website roster. Because we believe that coders should be out there coding. Let computers monitor computers, so that we humans don’t have to worry about it.
 
