@@ -233,9 +233,9 @@ class Composer
         return $versions;
     }
 
-    private function waitForPromises(array $promises) {
-
-        if (method_exists(Utils::class, 'settle')){
+    private function waitForPromises(array $promises)
+    {
+        if (method_exists(Utils::class, 'settle')) {
             Utils::settle($promises)->wait();
 
             return;
