@@ -5,6 +5,7 @@ namespace OnePilot\ClientBundle\Classes;
 use Composer\Semver\Semver;
 use Composer\Semver\VersionParser;
 use GuzzleHttp\Client;
+use GuzzleHttp\Promise\Utils;
 use GuzzleHttp\Psr7\Response;
 use OnePilot\ClientBundle\Contracts\PackageDetector;
 use OnePilot\ClientBundle\Traits\Instantiable;
@@ -67,7 +68,7 @@ class Composer
                     });
             }
 
-            \GuzzleHttp\Promise\settle($promises)->wait();
+            $this->waitForPromises($promises);
         }
 
         return $packages;
@@ -230,5 +231,17 @@ class Composer
         }
 
         return $versions;
+    }
+
+    private function waitForPromises(array $promises) {
+
+        if (method_exists(Utils::class, 'settle')){
+            Utils::settle($promises)->wait();
+
+            return;
+        }
+
+        // Support of guzzle/promises < 1.4
+        \GuzzleHttp\Promise\settle($promises)->wait();
     }
 }
